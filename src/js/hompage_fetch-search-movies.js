@@ -4,6 +4,8 @@ import { optionsIMDB } from './api/imdb-api';
 import { paginationFetch } from './pagination-fetch';
 import { paginationSearch } from './pagination-search';
 
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-aio.js';
 
@@ -52,6 +54,11 @@ const optionError = {
 async function fetchMovies() {
   refs.galleryFetchContainer.classList.remove('is-hidden');
   refs.paginationItemsFetchContainer.classList.remove('is-hidden');
+
+  Loading.pulse({
+    svgColor: 'purple',
+  });
+
   try {
     const res = await axios.get(
       `${BASE_URL}/3/trending/movie/day?api_key=${API_KEY}&page=${page}`
@@ -72,6 +79,8 @@ async function fetchMovies() {
       onFetchPaginationClick
     );
     paginationFetch(page, totalPages);
+
+    Loading.remove(100);
 
     return res;
   } catch (error) {
@@ -129,6 +138,10 @@ async function onFetchPaginationClick({ target }) {
   let API_KEY = optionsIMDB.specs.key;
   let page = optionsIMDB.specs.page;
 
+  Loading.pulse({
+    svgColor: 'purple',
+  });
+
   try {
     const res = await axios.get(
       `${BASE_URL}/3/trending/movie/day?api_key=${API_KEY}&page=${page}`
@@ -140,6 +153,8 @@ async function onFetchPaginationClick({ target }) {
     totalPages = optionsIMDB.specs.totalPages;
 
     paginationFetch(page, totalPages);
+
+    Loading.remove(100);
 
     return res;
   } catch (err) {
